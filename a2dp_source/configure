@@ -1,4 +1,4 @@
-#!/bin/bas
+#!/bin/bash
 # Use to run configure.sh with a log of output
 currentDir=$(
   cd $(dirname "$0")
