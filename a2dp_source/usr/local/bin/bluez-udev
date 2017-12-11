@@ -30,7 +30,7 @@ EOT
     if [ $audio_source != "" ]; then
         pactl set-source-volume $audio_source 90%
     fi
-    pactl set-card-profile $PACARD a2dp_sink
+    pactl set-card-profile $PACARD a2dp
     
     
     pactl set-default-sink $audio_sink
