@@ -48,7 +48,7 @@ tst sudo cp init.d/bluetooth /etc/init.d
 tst sudo chmod +x /etc/init.d/bluetooth
 tst sudo update-rc.d bluetooth defaults
 
-sudo apt-get install libtool intltool libsndfile-dev libcap-dev libjson0-dev libasound2-dev libavahi-client-dev libbluetooth-dev libglib2.0-dev libsamplerate0-dev libsbc-dev libspeexdsp-dev libssl-dev libtdb-dev libbluetooth-dev intltool -y
+sudo apt-get install libtool intltool libsndfile-dev libcap-dev libjson0-dev libasound2-dev libavahi-client-dev libbluetooth-dev libglib2.0-dev libsamplerate0-dev libsbc-dev libspeexdsp-dev libssl-dev libtdb-dev libbluetooth-dev intltool autopoint -y
 
 cd ~
 git clone https://github.com/json-c/json-c.git
