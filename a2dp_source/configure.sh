@@ -83,6 +83,7 @@ sudo ./bootstrap.sh
 sudo make
 sudo make install
 sudo ldconfig
+cd $START_PATH
 tst sudo cp etc/pulse/daemon.conf /etc/pulse
 tst sudo cp etc/pulse/system.pa /etc/pulse
 tst sudo cp .asoundrc ~/.asoundrc
