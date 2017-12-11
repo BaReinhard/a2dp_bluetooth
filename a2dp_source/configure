@@ -1,0 +1,27 @@
+#!/bin/bas
+# Use to run configure.sh with a log of output
+currentDir=$(
+  cd $(dirname "$0")
+  pwd
+)
+START_PATH=$currentDir 
+cd $START_PATH
+
+#--------------------------------------------------------------------
+function tst {
+    echo "===> Executing: $*"
+    if ! $*; then
+        echo "Exiting script due to error from: $*"
+        exit 1
+    fi
+}
+#--------------------------------------------------------------------
+log="./configure.log"
+touch $log
+
+tst sudo chmod +x -R $START_PATH | tee -a $log
+
+
+tst ./configure.sh | tee -a $log
+echo "======= Configuration Complete ========"
+echo "Reboot to test out the Bluetooth Playback"
