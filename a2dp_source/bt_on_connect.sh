@@ -31,6 +31,16 @@ KERNEL=="input[0-9]*", RUN+="/usr/local/bin/bluez-udev"
 EOT
 
 fi
+VERSION=`cat /etc/os-release | grep VERSION= | head -1 | sed "s/VERSION=//"`
 
-tst sudo cp usr/local/bin/bluez-udev /usr/local/bin/bluez-udev
+if [ "$VERSION" = "\"8 (jessie)\"" ]
+then
+    exc sudo cp usr/local/bin/bluez-udev /usr/local/bin/bluez-udev
+elif [ "$VERSION" = "\"9 (stretch)\"" ]
+then
+    exc sudo cp usr/local/bin/bluez-udev.stretch /usr/local/bin/bluez-udev
+else
+    log "You are running an unsupported VERSION of RASPBIAN"
+    log "Some features may not work as expected"
+fi
 sudo chmod +x /usr/local/bin/bluez-udev

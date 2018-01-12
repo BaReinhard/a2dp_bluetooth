@@ -4,24 +4,20 @@ currentDir=$(
   cd $(dirname "$0")
   pwd
 )
-START_PATH=$currentDir 
-cd $START_PATH
-
-#--------------------------------------------------------------------
-function tst {
-    echo "===> Executing: $*"
-    if ! $*; then
-        echo "Exiting script due to error from: $*"
-        exit 1
-    fi
-}
-#--------------------------------------------------------------------
-log="./configure.log"
-touch $log
-
-tst sudo chmod +x -R $START_PATH | tee -a $log
+A2DPSOURCE_PATH=$currentDir 
+A2DPSOURCE_BACKUP_PATH="$A2DPSOURCE_PATH/backup_files"
+cd $A2DPSOURCE_PATH
+export A2DPSOURCE_PATH
+export A2DPSOURCE_BACKUP_PATH
 
 
-tst ./configure.sh | tee -a $log
+# Set up file-based logging
+exec 1> >(tee configure.log)
+
+
+exc sudo chmod +x -R $A2DPSOURCE_PATH
+
+
+run ./configure.sh
 echo "======= Configuration Complete ========"
 echo "Reboot to test out the Bluetooth Playback"

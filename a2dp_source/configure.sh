@@ -13,59 +13,91 @@ while [ $AUTOCONNECT != "y" ] && [ $AUTOCONNECT != "n" ];
 do
 	read -p "When a bluetooth device connects do you want move audio output to the bluetooth device? (y/n) : " AUTOCONNECT
 done
-START_PATH=$currentDir 
-cd $START_PATH
-export START_PATH
-#--------------------------------------------------------------------
-function tst {
-    echo "===> Executing: $*"
-    if ! $*; then
-        echo "Exiting script due to error from: $*"
-        exit 1
-    fi	
-}
-#--------------------------------------------------------------------
+A2DPSOURCE_PATH=$currentDir 
+A2DPSOURCE_BACKUP_PATH="$A2DPSOURCE_PATH/backup_files"
+cd $A2DPSOURCE_PATH
+export A2DPSOURCE_PATH
+export A2DPSOURCE_BACKUP_PATH
+source functions.sh
+source dependencies.sh
 
-# Install Pulse Audio & Bluez
-tst sudo apt-get install bluez pulseaudio pulseaudio-module-bluetooth -y
 
-# Install dbus for python
-tst sudo apt-get install python-dbus -y
+
+VERSION=`cat /etc/os-release | grep VERSION= | head -1 | sed "s/VERSION=//"`
+
+
+if [ "$VERSION" = "\"8 (jessie)\"" ]
+then
+    log "Raspbian Jessie Found"
+    for _dep in ${JESSIE_BT_DEPS[@]}; do
+        apt-get install $_dep -y;
+    done
+elif [ "$VERSION" = "\"9 (stretch)\"" ]
+then
+    log "Raspbian Stretch Found"
+    for _dep in ${STRETCH_BT_DEPS[@]}; do
+        apt_install $_dep;
+    done
+else
+    log "You are running an unsupported VERSION of RASPBIAN"
+    log "Some features may not work as expected"
+fi
+for _dep in ${BT_DEPS[@]}; do
+    apt_install $_dep;
+done
 
 # Create users and priviliges for Bluez-Pulse Audio interaction - most should already exist
-tst sudo addgroup --system pulse
-tst sudo adduser --system --ingroup pulse --home /var/run/pulse pulse
-tst sudo addgroup --system pulse-access
-tst sudo adduser pulse audio
-tst sudo adduser root pulse-access
-tst sudo adduser pulse lp
+exc sudo addgroup --system pulse
+exc sudo adduser --system --ingroup pulse --home /var/run/pulse pulse
+exc sudo addgroup --system pulse-access
+exc sudo adduser pulse audio
+exc sudo adduser root pulse-access
+exc sudo adduser pulse lp
 
-tst sudo cp init.d/pulseaudio /etc/init.d
-tst sudo chmod +x /etc/init.d/pulseaudio
-tst sudo update-rc.d pulseaudio defaults
+save_original /etc/init.d/pulseaudio
+exc sudo cp init.d/pulseaudio /etc/init.d
+exc sudo chmod +x /etc/init.d/pulseaudio
+exc sudo update-rc.d pulseaudio defaults
 
-tst sudo cp init.d/bluetooth /etc/init.d
-tst sudo chmod +x /etc/init.d/bluetooth
-tst sudo update-rc.d bluetooth defaults
+save_original /etc/init.d/bluetooth
+exc sudo cp init.d/bluetooth /etc/init.d
+exc sudo chmod +x /etc/init.d/bluetooth
+exc sudo update-rc.d bluetooth defaults
 
-sudo apt-get install libtool intltool libsndfile-dev libcap-dev libjson0-dev libasound2-dev libavahi-client-dev libbluetooth-dev libglib2.0-dev libsamplerate0-dev libsbc-dev libspeexdsp-dev libssl-dev libtdb-dev libbluetooth-dev intltool -y
+if [ -d "/etc/pulse" ]
+then
+  PA_FILES=`ls /etc/pulse`
+  for _file in ${PA_FILES[@]}; do
+        if [ -e $_file ]; then 
+            if [ -d $_file ]; then 
+               continue
+            else
+               save_original $_file
+            fi
+        fi
+  done
+else
+  exc sudo mkdir /etc/pulse  
+fi
 
+exc cd ~
+remove_dir json-c
+exc git clone https://github.com/json-c/json-c.git
+exc cd json-c
+exc sh autogen.sh
+exc ./configure 
+exc make
+exc sudo make install
 cd ~
-git clone https://github.com/json-c/json-c.git
-cd json-c
-sh autogen.sh
-./configure 
-make
-sudo make install
-cd ~
-sudo apt install autoconf autogen automake build-essential libasound2-dev libflac-dev libogg-dev libtool libvorbis-dev pkg-config python -y
-git clone git://github.com/erikd/libsndfile.git
-cd libsndfile
-./autogen.sh
-./configure --enable-werror
-make
-sudo make install
+remove_dir libsndfile
+exc git clone git://github.com/erikd/libsndfile.git
+exc cd libsndfile
+exc ./autogen.sh
+exc ./configure --enable-werror
+exc make
+exc sudo make install
 
+save_original /etc/bluetooth/main.conf
 echo "===========Setting Bluetooth Policy========="
 cat << EOT | sudo tee -a /etc/bluetooth/main.conf
 [Policy]
@@ -74,19 +106,35 @@ EOT
 
 
 
-cd $START_PATH
-echo "==============Compiling PulseAudio 6.0 from Source================="
-cd ~
-git clone --branch v6.0 https://github.com/pulseaudio/pulseaudio
-cd pulseaudio
-sudo ./bootstrap.sh
-sudo make
-sudo make install
-sudo ldconfig
-cd $START_PATH
-tst sudo cp etc/pulse/daemon.conf /etc/pulse
-tst sudo cp etc/pulse/system.pa /etc/pulse
-tst sudo cp .asoundrc ~/.asoundrc
+cd $A2DPSOURCE_PATH
+if [ "$VERSION" = "\"8 (jessie)\"" ]
+  then
+      log "Raspbian Jessie Found"
+      log "Pulseaudio Version Below v6.0, upgrading from source"
+      exc remove_dir /etc/pulsebackup
+      exc sudo mkdir /etc/pulsebackup
+      exc sudo cp /etc/pulse/* /etc/pulsebackup/
+      exc cd ~
+      exc remove_dir pulseaudio
+      exc git clone --branch v6.0 https://github.com/pulseaudio/pulseaudio
+      exc cd pulseaudio
+      exc sudo ./bootstrap.sh
+      exc sudo make
+      exc sudo make install
+      exc sudo ldconfig
+      exc sudo cp /etc/pulsebackup/* /etc/pulse
+  elif [ "$VERSION" = "\"9 (stretch)\"" ]
+  then
+      log "Raspbian Stretch Found"
+      log "Pulseaudio Version Already Exceeds v6.0"
+      log "Patching System Daemon"
+      exc sudo sed -i "s+DAEMON=/usr/local/bin/pulseaudio+DAEMON=/usr/bin/pulseaudio+" /etc/init.d/pulseaudio 
+      exc sudo systemctl daemon-reload
+      exc sudo cp .asoundrc ~/.asoundrc
+  else
+      log "You are running an unsupported VERSION of RASPBIAN"
+  fi
+
 if [ $AUTOCONNECT = "y" ]; then
     echo "=====Installing Auto Connect bluez-udev====="
     tst sudo ./bt_on_connect.sh
