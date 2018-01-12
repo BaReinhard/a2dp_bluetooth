@@ -20,10 +20,10 @@ EOT
     PACARD=`pactl list cards | grep "Card #" | sed "s/Card #//"`
     
     # Grab Sink Input if it exists
-    audio_source=`pactl pactl list sink-inputs | grep "Sink Input" | sed "s/Sink Input #//"`
+    audio_source=`pactl list sink-inputs | grep "Sink Input" | sed "s/Sink Input #//"`
     if [ $audio_source = "" ];then
         sleep 5
-        audio_source=`pactl pactl list sink-inputs | grep "Sink Input" | sed "s/Sink Input #//"`
+        audio_source=`pactl list sink-inputs | grep "Sink Input" | sed "s/Sink Input #//"`
 
     fi
     pactl set-sink-volume $audio_sink 65537
@@ -49,10 +49,10 @@ fi
 
 if [ "$action" = "remove" ]; then
     # Grab Sink Input if it exists
-    audio_source=`pactl pactl list sink-inputs | grep "Sink Input" | sed "s/Sink Input #//"`
+    audio_source=`pactl list sink-inputs | grep "Sink Input" | sed "s/Sink Input #//"`
     if [ $audio_source = "" ];then
         sleep 5
-        audio_source=`pactl pactl list sink-inputs | grep "Sink Input" | sed "s/Sink Input #//"`
+        audio_source=`pactl list sink-inputs | grep "Sink Input" | sed "s/Sink Input #//"`
 
     fi
     pactl set-sink-volume 0 65537
