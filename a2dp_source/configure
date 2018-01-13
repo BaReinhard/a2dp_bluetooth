@@ -1,5 +1,13 @@
 #!/bin/bash
 # Use to run configure.sh with a log of output
+
+if [ $SUDO_USER ]; 
+then 
+	user=$SUDO_USER;echo 
+else 
+	echo "Must be run as root user!!" 
+	exit 1 
+fi
 currentDir=$(
   cd $(dirname "$0")
   pwd
@@ -18,6 +26,6 @@ exec 1> >(tee configure.log)
 exc sudo chmod +x -R $A2DPSOURCE_PATH
 
 
-run ./configure.sh
+run su ${user} -c ./configure.sh
 echo "======= Configuration Complete ========"
 echo "Reboot to test out the Bluetooth Playback"
