@@ -14,7 +14,7 @@ then
   export VERSION
 fi
 AUTOCONNECT="AUTOCONNECT"
-while [ $AUTOCONNECT != "y" ] && [ $AUTOCONNECT != "n" ];
+while [ "$AUTOCONNECT" != "y" ] && [ "$AUTOCONNECT" != "n" ];
 do
 	read -p "When a bluetooth device connects do you want move audio output to the bluetooth device? (y/n) : " AUTOCONNECT
 done
@@ -143,7 +143,7 @@ if [ "$VERSION" = "\"8 (jessie)\"" ]
       log "You are running an unsupported VERSION of RASPBIAN"
   fi
 
-if [ $AUTOCONNECT = "y" ]; then
+if [ "$AUTOCONNECT" = "y" ]; then
     echo "=====Installing Auto Connect bluez-udev====="
     tst sudo ./bt_on_connect.sh
 fi
