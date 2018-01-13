@@ -10,7 +10,8 @@ function tst {
     fi	
 }
 #--------------------------------------------------------------------
-
+source functions.sh
+source dependencies.sh
 if [ -f /etc/udev/rules.d/99-com.rules ]; then
 
 sudo patch /etc/udev/rules.d/99-com.rules << EOT
