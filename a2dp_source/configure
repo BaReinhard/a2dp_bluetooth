@@ -1,12 +1,13 @@
 #!/bin/bash
 # Use to run configure.sh with a log of output
 
-if [ $SUDO_USER ]; 
-then 
-	user=$SUDO_USER;echo 
-else 
-	echo "Must be run as root user!!" 
-	exit 1 
+
+if [ $SUDO_USER ]; then echo "Must be run as non-root user";exit ; else user=`whoami`; fi
+export user
+if [ -z "$VERSION" ]
+then
+  VERSION=`cat /etc/os-release | grep VERSION= | sed "s/VERSION=//"`
+  export VERSION
 fi
 currentDir=$(
   cd $(dirname "$0")
@@ -26,6 +27,6 @@ exec 1> >(tee configure.log)
 exc sudo chmod +x -R $A2DPSOURCE_PATH
 
 
-run su ${user} -c ./configure.sh
+run ./configure.sh
 echo "======= Configuration Complete ========"
 echo "Reboot to test out the Bluetooth Playback"
