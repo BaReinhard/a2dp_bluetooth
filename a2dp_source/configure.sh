@@ -80,22 +80,7 @@ else
   exc sudo mkdir /etc/pulse  
 fi
 
-exc cd ~
-remove_dir json-c
-exc git clone https://github.com/json-c/json-c.git
-exc cd json-c
-exc sh autogen.sh
-exc ./configure 
-exc make
-exc sudo make install
-cd ~
-remove_dir libsndfile
-exc git clone git://github.com/erikd/libsndfile.git
-exc cd libsndfile
-exc ./autogen.sh
-exc ./configure --enable-werror
-exc make
-exc sudo make install
+
 
 save_original /etc/bluetooth/main.conf
 echo "===========Setting Bluetooth Policy========="
@@ -111,6 +96,22 @@ if [ "$VERSION" = "\"8 (jessie)\"" ]
   then
       log "Raspbian Jessie Found"
       log "Pulseaudio Version Below v6.0, upgrading from source"
+      exc cd ~
+        remove_dir json-c
+        exc git clone https://github.com/json-c/json-c.git
+        exc cd json-c
+        exc sh autogen.sh
+        exc ./configure 
+        exc make
+        exc sudo make install
+        cd ~
+        remove_dir libsndfile
+        exc git clone git://github.com/erikd/libsndfile.git
+        exc cd libsndfile
+        exc ./autogen.sh
+        exc ./configure --enable-werror
+        exc make
+        exc sudo make install
       exc remove_dir /etc/pulsebackup
       exc sudo mkdir /etc/pulsebackup
       exc sudo cp /etc/pulse/* /etc/pulsebackup/
