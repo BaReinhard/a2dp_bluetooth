@@ -20,6 +20,8 @@ export A2DPSOURCE_PATH
 export A2DPSOURCE_BACKUP_PATH
 source functions.sh
 source dependencies.sh
+apt_update
+apt_upgrade
 
 
 
