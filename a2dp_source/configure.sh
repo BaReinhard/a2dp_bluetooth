@@ -3,11 +3,16 @@
 ### This should be run after LIGHTSHOWPI was installed, it will require a REBOOT afterwards.
 ### Must be run as non-root user
 
-if [ $SUDO_USER ]; then echo "Must be run as non-root user";exit ; else user=`whoami`; fi
+
 currentDir=$(
   cd $(dirname "$0")
   pwd
 ) 
+if [ -z "$VERSION" ]
+then
+  VERSION=`cat /etc/os-release | grep VERSION= | sed "s/VERSION=//"`
+  export VERSION
+fi
 AUTOCONNECT="AUTOCONNECT"
 while [ $AUTOCONNECT != "y" ] && [ $AUTOCONNECT != "n" ];
 do
