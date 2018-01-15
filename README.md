@@ -34,3 +34,7 @@ sudo bluetoothctl
 ***Simply go to System Settings, Bluetooth add device manually in GUI, after that each time your device turns on it will automatically connect and stream audio to the device***
 
 **After the install, you will need to reboot and manually pair, trust, and connect your device only once. Going forward you will only need to turn on the bluetooth device and it will automatically connect**
+
+**Donation**
+***Donation is not required, but donations do help to keep this project alive and up to date***
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](brett@reinhards.us)
