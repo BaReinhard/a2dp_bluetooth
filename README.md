@@ -35,6 +35,4 @@ sudo bluetoothctl
 
 **After the install, you will need to reboot and manually pair, trust, and connect your device only once. Going forward you will only need to turn on the bluetooth device and it will automatically connect**
 
-**Donation**
-***Donation is not required, but donations do help to keep this project alive and up to date***
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/pools/c/812h247JvP)
+
