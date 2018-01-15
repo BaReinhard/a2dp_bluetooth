@@ -37,4 +37,4 @@ sudo bluetoothctl
 
 **Donation**
 ***Donation is not required, but donations do help to keep this project alive and up to date***
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](brett@reinhards.us)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](brett@reinhards.us)
