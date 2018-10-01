@@ -30,7 +30,7 @@ sudo bluetoothctl
 [bluetooth]# connect XX:XX:XX:XX:XX
 [bluetooth]# exit
 ```
-**Pairing on Ubunut**
+**Pairing on Ubuntu**
 ***Simply go to System Settings, Bluetooth add device manually in GUI, after that each time your device turns on it will automatically connect and stream audio to the device***
 
 **After the install, you will need to reboot and manually pair, trust, and connect your device only once. Going forward you will only need to turn on the bluetooth device and it will automatically connect**
